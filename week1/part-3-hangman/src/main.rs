@@ -33,8 +33,52 @@ fn main() {
     // vector than it is to pull them out of a string. You can get the ith character of
     // secret_word by doing secret_word_chars[i].
     let secret_word_chars: Vec<char> = secret_word.chars().collect();
+    let mut answer = String::from("-".repeat(secret_word_chars.len()));
+    let mut cnt = 0;
     // Uncomment for debugging:
-    // println!("random word: {}", secret_word);
-
+    //println!("random word: {:?}", secret_word_chars);
     // Your code here! :)
+
+    loop {
+        let chr;
+        let mut input = String::new();
+        let mut tmp: Vec<char> = answer.chars().collect();
+        let mut flag = 0;
+
+        println!("The  word so far is {}", answer);
+        println!("You have guessed the following letters:");
+        println!("You have {} guesses left", NUM_INCORRECT_GUESSES - cnt);
+        print!("Please guess a letter: ");
+        io::stdout().flush().unwrap();
+        io::stdin().read_line(&mut input).expect("Failed to read line\n");
+        chr = input.chars().nth(0).unwrap();
+        
+
+        for i in 0..secret_word_chars.len() {
+            tmp[i] = if secret_word_chars[i] == chr {
+                flag = 1;
+                chr
+            } else {
+                tmp[i]
+            }
+        }
+
+        answer = tmp.into_iter().collect();
+        if flag == 0 {
+            cnt += 1;
+            println!("Sorry, that letter is not in the word");
+        }
+        
+        print!("\n\n");
+
+        if answer == secret_word || cnt == NUM_INCORRECT_GUESSES {
+            break;
+        }
+    }
+
+    if answer == secret_word {
+        println!("Congratulations you guessed the secret word: {}!", answer);
+    } else {
+        println!("Sorry, you ran out of guesses!");
+    }
 }
