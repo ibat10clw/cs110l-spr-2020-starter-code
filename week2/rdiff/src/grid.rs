@@ -1,3 +1,5 @@
+use std::usize;
+
 // Grid implemented as flat vector
 pub struct Grid {
     num_rows: usize,
@@ -22,6 +24,14 @@ impl Grid {
         (self.num_rows, self.num_cols)
     }
 
+    fn is_valid_index(&self, row: usize, col: usize) -> bool {
+        row < self.num_rows && col < self.num_cols
+    }
+
+    fn convert_2d_to_1d(&self, row: usize, col: usize) -> usize {
+        row * self.num_cols + col
+    }    
+
     /// Returns the element at the specified location. If the location is out of bounds, returns
     /// None.
     ///
@@ -32,16 +42,26 @@ impl Grid {
     /// https://docs.rs/array2d/0.2.1/array2d/struct.Array2D.html
     #[allow(unused)] // TODO: delete this line when you implement this function
     pub fn get(&self, row: usize, col: usize) -> Option<usize> {
-        unimplemented!();
         // Be sure to delete the #[allow(unused)] line above
+        if (self.is_valid_index(row, col)) {
+            let index = self.convert_2d_to_1d(row, col);
+            Some(self.elems[index])
+        } else {
+            None
+        }
     }
 
     /// Sets the element at the specified location to the specified value. If the location is out
     /// of bounds, returns Err with an error message.
     #[allow(unused)] // TODO: delete this line when you implement this function
     pub fn set(&mut self, row: usize, col: usize, val: usize) -> Result<(), &'static str> {
-        unimplemented!();
-        // Be sure to delete the #[allow(unused)] line above
+        if (self.is_valid_index(row, col)) {
+            let index = self.convert_2d_to_1d(row, col);
+            self.elems[index] = val;
+            Ok(())
+        } else {
+            Err("Out of range\n")
+        }
     }
 
     /// Prints a visual representation of the grid. You can use this for debugging.
